@@ -1,4 +1,3 @@
-"use client"
 import React, { FC } from 'react'
 import {
     Table,
@@ -9,21 +8,36 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { JOB_LISTING_COLUMNS, JOB_LISTING_DATA } from '@/constants'
+import { JOB_LISTING_COLUMNS } from '@/constants'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { MoreVertical } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import ButtonActionTable from '@/components/organisms/ButtonActionTable'
+import prisma from '../../../../lib/prisma'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { Job } from '@prisma/client'
+import { dateFormat } from '@/lib/utils'
+import moment from 'moment'
 
 
 interface JobListingPageProps {
 
 }
 
-const JobListingPage: FC<JobListingPageProps> = ({ }) => {
+async function getDataJobs() {
+	const session = await getServerSession(authOptions);
 
-    const router = useRouter()
+	const jobs = prisma.job.findMany({
+		where: {
+			companyId: session?.user.id,
+		},
+	});
+
+	return jobs;
+}
+
+const JobListingPage: FC<JobListingPageProps> = async() => {
+    const jobs = await getDataJobs()
+    console.log(jobs);
     return (
         <div>
             <div className='font-semibold text-3xl'>
@@ -31,7 +45,6 @@ const JobListingPage: FC<JobListingPageProps> = ({ }) => {
             </div>
             <div className='mt-10'>
                 <Table>
-                    <TableCaption>A list of your Job Listing.</TableCaption>
                     <TableHeader>
                         <TableRow>
                             {
@@ -46,21 +59,25 @@ const JobListingPage: FC<JobListingPageProps> = ({ }) => {
                     </TableHeader>
                     <TableBody>
                         {
-                            JOB_LISTING_DATA.map((item: any, i: number) => (
-                                <TableRow key={item+i}>
+                            jobs.map((item: Job, i: number) => (
+                                <TableRow key={item.roles + i}>
                                     <TableCell>{item.roles}</TableCell>
                                     <TableCell>
-                                        <Badge>{item.status}</Badge>
+                                        {moment(item.datePosted).isBefore(item.dueDate) ? (
+                                            <Badge>Live</Badge>
+                                        ) : (
+                                            <Badge variant='destructive'>Expired</Badge>
+                                        )}
                                     </TableCell>
-                                    <TableCell>{item.datePosted}</TableCell>
-                                    <TableCell>{item.dueDate}</TableCell>
+                                    <TableCell>{dateFormat(item.datePosted)}</TableCell>
+                                    <TableCell>{dateFormat(item.dueDate)}</TableCell>
                                     <TableCell>
                                         <Badge variant='outline'>{item.jobType}</Badge>
                                     </TableCell>
-                                    <TableCell>{item.applicant}</TableCell>
-                                    <TableCell>{item.applicant} / {item.needs}</TableCell>
+                                    <TableCell>{item.applicants}</TableCell>
+                                    <TableCell>{item.applicants} / {item.needs}</TableCell>
                                     <TableCell>
-                                        <ButtonActionTable url='/job-detail/1' />
+                                        <ButtonActionTable url={`/job-detail/${item.id}`} />
                                     </TableCell>
                                 </TableRow>
                             ))

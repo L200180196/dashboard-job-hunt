@@ -4,24 +4,63 @@ import FieldInput from '@/components/organisms/FieldInput'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useToast } from '@/components/ui/use-toast'
 import { socialMediaFormSchema } from '@/lib/form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { CompanySocialMedia } from '@prisma/client'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 
 interface SocialMediaFormProps {
-
+    detail: CompanySocialMedia | undefined
 }
 
-const SocialMediaForm: FC<SocialMediaFormProps> = ({ }) => {
+const SocialMediaForm: FC<SocialMediaFormProps> = ({ detail }) => {
     const form = useForm<z.infer<typeof socialMediaFormSchema>>({
-        resolver: zodResolver(socialMediaFormSchema)
+        resolver: zodResolver(socialMediaFormSchema),
+        defaultValues: {
+            facebook: detail?.facebook,
+            instagram: detail?.instagram,
+            linkedIn: detail?.linkedIn,
+            twitter: detail?.twitter,
+            youtube: detail?.youtube
+        }
     })
 
-    const onSubmit = (val: z.infer<typeof socialMediaFormSchema>) => {
-        console.log(val)
+    const onSubmit = async (val: z.infer<typeof socialMediaFormSchema>) => {
+        try {
+            const body = {
+                ...val,
+                companyId: session?.user.id
+            }
+
+            await fetch('/api/company/social-media', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/JSON'},
+                body: JSON.stringify(body)
+            })
+
+            router.refresh()
+            toast({
+                title: 'Success',
+                description: 'Edit Social Media Success'
+            })
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: 'Please Try Again'
+            })
+
+            console.log(error)
+        }
     }
+
+    const { data:session } = useSession()
+    const {toast} = useToast()
+    const router = useRouter()
 
     return (
         <Form {...form}>
@@ -60,14 +99,14 @@ const SocialMediaForm: FC<SocialMediaFormProps> = ({ }) => {
                     />
                     <FormField
                         control={form.control}
-                        name="linkedin"
+                        name="linkedIn"
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>Linkedin</FormLabel>
                             <FormControl>
                                 <Input 
                                 className='w-[450px]'
-                                placeholder="https://linkedin.com/twitter" {...field} />
+                                placeholder="https://linkedIn.com/twitter" {...field} />
                             </FormControl>
                             <FormMessage />
                             </FormItem>

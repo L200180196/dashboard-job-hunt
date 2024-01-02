@@ -2,11 +2,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { jobFromSchema } from '@/lib/form-schema'
 import { PlusIcon } from 'lucide-react'
-import { FC, useRef, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
-import { z } from 'zod'
+import { FC, useRef, useState, useEffect } from 'react'
 
 interface InputSkillsProps {
     form: any
@@ -38,6 +35,14 @@ const InputSkills: FC<InputSkillsProps> = ({ form, name, label }) => {
         setValues(skills)
         form.setValue(name, skills)
     }
+
+    useEffect(() => {
+        const val = form.getValues(name)
+
+        if (val && val.length > 0) {
+            setValues(val)
+        }
+    }, [form, name])
 
     return (
         <FormField 

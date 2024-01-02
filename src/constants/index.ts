@@ -13,7 +13,7 @@ export const JOBTYPES: EnumValues = [
 ]
 
 export const JOB_LISTING_COLUMNS: string[] = ['Roles', 'Status', 'Date Posted', 'Due Date', 'Job Type', 'Applicants', 'Needs']
-export const JOB_APPLICANTS_COLUMN: string[] = ['Name', 'Applied Date']
+export const JOB_APPLICANTS_COLUMN: string[] = ['Name']
 export const JOB_APPLICANTS_DATA = [
     {
         name: "Maulana",
