@@ -1,9 +1,9 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
-import NextAuth, { NextAuthOptions } from "next-auth"
+import NextAuth, { AuthOptions } from "next-auth"
 import prisma from '../../../../../lib/prisma';
 import { comparePassword } from '@/lib/utils';
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: AuthOptions = {
     secret: process.env.NEXT_AUTH_SECRET,
     providers: [
         CredentialsProvider({
