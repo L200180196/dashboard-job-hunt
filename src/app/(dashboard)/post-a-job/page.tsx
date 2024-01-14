@@ -33,6 +33,8 @@ interface PostJobPageProps {
 
 }
 
+export const revalidate = 0
+
 const PostJobPage: FC<PostJobPageProps> = ({}) => {
     const { data, error, isLoading } = useSWR<CategoryJob[]>(`/api/job/categories`, fetcher)
     const [editorLoaded, setEditorLoaded] = useState<boolean>(false)

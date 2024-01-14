@@ -11,6 +11,8 @@ interface SettingsPageProps {
 
 }
 
+export const revalidate = 0
+
 async function getDetailCompany() {
     const session = await getServerSession(authOptions)
     const company = await prisma.company.findFirst({

@@ -86,7 +86,7 @@ const DialogAddTeam: FC<DialogAddTeamProps> = ({ }) => {
                         name="name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Website</FormLabel>
+                                <FormLabel>Name</FormLabel>
                                 <FormControl>
                                     <Input
                                     placeholder="Name" {...field} />
@@ -100,7 +100,7 @@ const DialogAddTeam: FC<DialogAddTeamProps> = ({ }) => {
                         name="position"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Website</FormLabel>
+                                <FormLabel>Position</FormLabel>
                                 <FormControl>
                                     <Input
                                     placeholder="Position" {...field} />
@@ -115,7 +115,7 @@ const DialogAddTeam: FC<DialogAddTeamProps> = ({ }) => {
                             name="instagram"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Website</FormLabel>
+                                    <FormLabel>Instagram</FormLabel>
                                     <FormControl>
                                         <Input
                                         placeholder="Instagram" {...field} />
@@ -129,7 +129,7 @@ const DialogAddTeam: FC<DialogAddTeamProps> = ({ }) => {
                             name="linkedIn"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Website</FormLabel>
+                                    <FormLabel>Linkedin</FormLabel>
                                     <FormControl>
                                         <Input 
                                         placeholder="Linkedin" {...field} />
